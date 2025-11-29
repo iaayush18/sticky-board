@@ -8,8 +8,8 @@ import { Pin } from './Pin';
 
 interface NoteCardProps {
   note: Note;
-  onDelete: (id: string) => void;
-  onPositionChange: (id: string, x: number, y: number) => void;
+  onDelete: (id: string) => void | Promise<void>;
+  onPositionChange: (id: string, x: number, y: number) => void | Promise<void>;
 }
 
 const colorClasses: Record<NoteColor, string> = {
