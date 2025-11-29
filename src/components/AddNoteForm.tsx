@@ -4,7 +4,7 @@ import { Plus, Image as ImageIcon, Type, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AddNoteFormProps {
-  onAddNote: (heading: string, body: string, imageUrl?: string) => void;
+  onAddNote: (heading: string, body: string, imageUrl?: string) => Promise<string | null>;
 }
 
 export const AddNoteForm = ({ onAddNote }: AddNoteFormProps) => {
@@ -12,16 +12,19 @@ export const AddNoteForm = ({ onAddNote }: AddNoteFormProps) => {
   const [body, setBody] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!heading.trim() || !body.trim()) return;
+    if (!heading.trim() || !body.trim() || isSubmitting) return;
     
-    onAddNote(heading.trim(), body.trim(), imageUrl.trim() || undefined);
+    setIsSubmitting(true);
+    await onAddNote(heading.trim(), body.trim(), imageUrl.trim() || undefined);
     setHeading('');
     setBody('');
     setImageUrl('');
     setIsExpanded(false);
+    setIsSubmitting(false);
   };
 
   const inputBaseClass = cn(
@@ -126,7 +129,7 @@ export const AddNoteForm = ({ onAddNote }: AddNoteFormProps) => {
               </button>
               <button
                 type="submit"
-                disabled={!heading.trim() || !body.trim()}
+                disabled={!heading.trim() || !body.trim() || isSubmitting}
                 className={cn(
                   'flex-1 py-2.5 rounded-lg',
                   'bg-primary text-primary-foreground',
@@ -137,7 +140,7 @@ export const AddNoteForm = ({ onAddNote }: AddNoteFormProps) => {
                 )}
               >
                 <Plus className="w-4 h-4" />
-                Pin Note
+                {isSubmitting ? 'Pinning...' : 'Pin Note'}
               </button>
             </div>
           </motion.form>
