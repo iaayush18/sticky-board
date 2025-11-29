@@ -1,4 +1,4 @@
-# Welcome to your Aayush's Git Hub Lab Project  
+# Welcome to your Aayush & Basavesh's Git Lab Project
 
 ## Project info
 
